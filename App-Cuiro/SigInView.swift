@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct SigInView: View {
+    @State var userName = ""
+    @State var fullName = ""
+    @State var birthday = ""
+    @State var male: Bool = false
+    @State var female: Bool = false
+    @State var email: Bool = false
+    @State var password = ""
     var body: some View {
-        @State var userName = ""
-        @State var fullName = ""
-        @State var birthday = ""
-        @State var male: Bool = true
-        @State var female: Bool = true
-        @State var email: Bool = true
-        @State var password = ""
         VStack(alignment: .center,spacing: 30) {
            Text("Sign In")
                 .font(Font.largeTitle)
@@ -45,20 +45,21 @@ struct ContentView: View {
                     alignment: .bottom
                 )
                 .padding()
-                
             HStack{
                 Spacer()
                 HStack{
-                    Toggle("", isOn: $male)
-                        .toggleStyle(.button)
-                    Text("Male")
+                    Toggle("", isOn: $female)
+                        .tint(.pink)
+                        .labelsHidden()
+                    Text("Female")
                         .font(Font.title2.bold())
                 }
                 Spacer()
                 HStack{
-                    Toggle("", isOn: $female)
-                        .toggleStyle(.button)
-                    Text("Female")
+                    Toggle("", isOn: $male)
+                        .tint(.pink )
+                        .labelsHidden()
+                    Text("Male")
                         .font(Font.title2.bold())
                 }
                 Spacer()
@@ -82,8 +83,9 @@ struct ContentView: View {
         }
         .padding()
     }
+    
 }
 
 #Preview {
-    ContentView()
+   SigInView()
 }

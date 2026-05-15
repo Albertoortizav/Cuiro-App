@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @State private var signInButton = false
+    @State private var logInButton = false
+
     var body: some View {
-        @State var signInButton = false
-        @State var logInButton = false
-        
         VStack{
             VStack(alignment:.center, spacing: 35){
                 Image("CuiRo")
@@ -26,8 +26,10 @@ struct ProfileView: View {
                     .lineLimit(3)
                     .multilineTextAlignment(.center)
               
-                Button(action:{}){
+                Button(action:{
                     
+                    logInButton.toggle()
+                }){
                     Text("Log in")
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -36,7 +38,10 @@ struct ProfileView: View {
                         .cornerRadius(30)
                 }
                 
-                Button(action:{}){
+                Button(action:{
+                   
+                    signInButton.toggle()
+                }){
                     Text("Sign In")
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -51,8 +56,13 @@ struct ProfileView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
             Color(red: 253/255, green: 230/255, blue: 240/255)
-        .ignoresSafeArea()
+                .ignoresSafeArea()
         )
+        .sheet(isPresented: $signInButton) {
+            SigInView()
+        }
+        
+       .sheet(isPresented: $logInButton) { LoginView() }
     }
 }
 

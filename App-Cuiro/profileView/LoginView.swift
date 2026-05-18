@@ -15,6 +15,7 @@ struct LoginView: View {
     @State private var createAccount = false
     var body: some View {
         VStack(alignment: .center, spacing: 50) {
+            Spacer()
             Text("Log in")
                 .font(.largeTitle)
                 .bold()
@@ -66,7 +67,7 @@ struct LoginView: View {
             
             HStack{
                 Text("Are you new? ")
-             Toggle("Create ypur account",isOn: $createAccount)
+             Toggle("Create your account",isOn: $createAccount)
                     .toggleStyle(.button)
                     .foregroundStyle(.black)
                     .bold()
@@ -74,6 +75,9 @@ struct LoginView: View {
             Spacer()
         }
         .padding()
+        .sheet(isPresented: $createAccount){
+            SigInView()
+        }
     }
 }
 

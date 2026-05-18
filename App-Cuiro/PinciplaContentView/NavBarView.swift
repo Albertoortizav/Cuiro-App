@@ -7,100 +7,129 @@
 
 import SwiftUI
 
-struct NavBarView:View {
-     @State var profile = false
-    @State var routine = false
+struct NavBarView: View {
+    enum Tab: Hashable {
+        case mensajes
+        case rutina
+        case inicio
+        case foro
+        case perfil
+    }
+
+    @State private var selection: Tab = .inicio
+
     var body: some View {
-        HStack{
-            Button(action: {}){
-               Text("Menu")
-                    .padding()
-                    .bold()
-                    .foregroundStyle(.white)
+        TabView(selection: $selection) {
+
+            // Mensajes
+            ShellView {
+                PlaceholderContent(title: "Mensajes")
             }
-            .background(Color.cyan)
-            .cornerRadius(10)
-            Spacer()
-            Image("CuiRo")
-                .resizable()
-                .scaledToFit()
-                .frame(width:70)
-        }.padding()
-        if profile{
-            PrincipalContentView()
-        }
-        else if routine {
-            RoutineView()
-        }
-        ZStack {
-            Rectangle()
-                .frame(maxWidth: .infinity,maxHeight: 100)
-                .foregroundStyle(.white)
-                .border(Color.gray)
-            HStack(spacing:50){
-                VStack{
-                    Button(action:{}){
-                        Image(systemName: "envelope.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30)
-                    }.foregroundStyle(.black)
-                    Text("Mensajes")
-                        .fontWeight(.light)
-                        .font(.system(size: 10))
-                }
-                VStack{
-                    Button(action:{routine = true}){
-                        Image(systemName: "clock")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30)
-                    }.foregroundStyle(.black)
-                    Text("Rutina")
-                        .fontWeight(.light)
-                        .font(.system(size: 10))
-                }
-                VStack{
-                    Button(action:{}){
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30)
-                    }.foregroundStyle(.black)
-                    Text("Inicio")
-                        .fontWeight(.light)
-                        .font(.system(size: 10))
-                }
-                VStack{
-                    Button(action:{}){
-                        Image(systemName: "person.3.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30)
-                    }.foregroundStyle(.black)
-                    Text("Foro")
-                        .fontWeight(.light)
-                        .font(.system(size: 10))
-                }
-                VStack{
-                    Button(action:{profile = true
-                        routine = false
-                        
-                    }){
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30)
-                    }.foregroundStyle(.black)
-                    Text("Perfil")
-                        .fontWeight(.light)
-                        .font(.system(size: 10))
-                }
-                
+            .tabItem {
+                Image(systemName: "envelope.fill")
+                Text("Mensajes")
             }
+            .tag(Tab.mensajes)
+
+            // Rutina
+            ShellView {
+                RoutineView()
+            }
+            .tabItem {
+                Image(systemName: "clock")
+                Text("Rutina")
+            }
+            .tag(Tab.rutina)
+
+            // Inicio
+            ShellView {
+                PlaceholderContent(title: "Inicio")
+            }
+            .tabItem {
+                Image(systemName: "house.fill")
+                Text("Inicio")
+            }
+            .tag(Tab.inicio)
+
+            // Foro
+            ShellView {
+                PlaceholderContent(title: "Foro")
+            }
+            .tabItem {
+                Image(systemName: "person.3.fill")
+                Text("Foro")
+            }
+            .tag(Tab.foro)
+
+            // Perfil
+            ShellView {
+                PrincipalContentView()
+            }
+            .tabItem {
+                Image(systemName: "person.circle")
+                Text("Perfil")
+            }
+            .tag(Tab.perfil)
         }
     }
 }
+
+// Vista de encabezado que se mostrará siempre arriba
+private struct HeaderView: View {
+    var body: some View {
+        ZStack{
+            HStack {
+                Button(action: {}) {
+                    Text("Menu")
+                        .padding()
+                        .bold()
+                        .foregroundStyle(.white)
+                }
+                .background(Color.cyan)
+                .cornerRadius(10)
+                Spacer()
+                Image("CuiRo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 70)
+            }
+            .padding()
+        }
+    }
+}
+
+// Contenedor común que fija el header arriba y coloca el contenido debajo
+private struct ShellView<Content: View>: View {
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HeaderView()
+            // El contenido específico de cada pestaña
+            content
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
+        .background(Color(red: 227/255, green: 83/255, blue: 123/255, opacity: 0.4))
+        
+    }
+}
+
+// Contenido placeholder reutilizable (solo el cuerpo, sin header)
+private struct PlaceholderContent: View {
+    let title: String
+    var body: some View {
+        VStack {
+            Spacer()
+            Text(title)
+                .font(.largeTitle)
+                .bold()
+                .foregroundStyle(.secondary)
+            Spacer()
+        }
+        .padding()
+    }
+}
+
 #Preview
 {
     NavBarView()

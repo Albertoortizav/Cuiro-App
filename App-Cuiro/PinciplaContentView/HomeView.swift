@@ -19,33 +19,54 @@ struct HomeView: View {
         case VitalSigns
         case HealthReport
     }
+    enum thirdinformationRegistration:Hashable,CaseIterable {
+        case information
+        case chemotherapy
+        case nutrition
+    }
+    enum fourthinformationRegistration:Hashable,CaseIterable {
+        case exercise
+        case love
+    
+    }
+
+
    
     var body: some View {
-        VStack{
-            VStack(spacing: 10){
-                HomeViewSearch()
-                ContentView()
-            }
-            
-        }.padding()
+        ScrollView{
+            VStack{
+                VStack(spacing: 10){
+                    HomeViewSearch()
+                    ContentView()
+                }
+                
+            }.padding()
+        }
     }
 }
 
 private struct HomeViewSearch:View {
     @State var text = ""
     var body: some View {
-        HStack{
-            Image(systemName: "magnifyingglass")
-            TextField("Need help?",text:$text )
-        }
-
+        ZStack{
+            Rectangle()
+                .frame(width: 357, height: 50)
+                .foregroundStyle(.white)
+                .cornerRadius(5)
+                .shadow(radius: 10)
+            HStack{
+                Image(systemName: "magnifyingglass")
+                TextField("Need help?",text:$text )
+            }.padding()
+        }  .frame(width: 357, height: 50)
     }
 }
 private struct ContentView:View {
     var selection: HomeView.informationRegistration = .ClinicalData
 
     var body: some View {
-        VStack{
+        VStack(alignment: .center){
+            Spacer()
             HStack{
                 Text("Information registration")
                 Spacer()
@@ -53,7 +74,7 @@ private struct ContentView:View {
             ZStack{
                 Rectangle()
                     .foregroundStyle(.white)
-                    .frame(width: 420, height: 300)
+                    .frame(width: 357, height: 300)
                     .cornerRadius(21)
                     .shadow(radius: 5)
                 VStack{
@@ -77,8 +98,41 @@ private struct ContentView:View {
                     }
                     Spacer()
                 }
-            }    .frame(width: 420, height: 300)
-        }
+            }    .frame(width: 357, height: 300)
+            HStack{
+                Text("Recomendations about...")
+                Spacer()
+            }
+            ZStack{
+                Rectangle()
+                    .foregroundStyle(.white)
+                    .frame(width: 357, height: 300)
+                    .cornerRadius(21)
+                    .shadow(radius: 5)
+                VStack{
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ForEach(HomeView.thirdinformationRegistration.allCases, id: \.self) { item in
+                            thirdElements(thirdSelection: item)
+                                .font(.title3)
+                        }.padding()
+                        Spacer()
+                    }
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ForEach(HomeView.fourthinformationRegistration.allCases, id: \.self) { item in
+                            fourthElements(fourthSelection: item)
+                                .font(.title3)
+                        }.padding()
+                        Spacer()
+                    }
+                    Spacer()
+                }
+            }    .frame(width: 357, height: 300)
+            
+        }.frame(width: 357)
     }
     
     @ViewBuilder
@@ -114,6 +168,38 @@ private struct ContentView:View {
             VStack{
                 Image(systemName: "doc.text.magnifyingglass")
                 Text("Health Report")}
+        }
+    }
+    @ViewBuilder
+    func thirdElements(thirdSelection:HomeView.thirdinformationRegistration ) -> some View{
+        switch thirdSelection {
+            
+        case .information:
+            VStack{
+                Image(systemName: "water.waves")
+                Text("Hydration")}
+        case .chemotherapy:
+            VStack{
+                Image(systemName: "stethoscope")
+                Text("Vital Signs")}
+        case .nutrition:
+            VStack{
+                Image(systemName: "doc.text.magnifyingglass")
+                Text("Health Report")}
+        }
+    }
+    @ViewBuilder
+    func fourthElements(fourthSelection:HomeView.fourthinformationRegistration ) -> some View{
+        switch fourthSelection {
+            
+        case .exercise:
+            VStack{
+                Image(systemName: "water.waves")
+                Text("Hydration")}
+        case .love:
+            VStack{
+                Image(systemName: "stethoscope")
+                Text("Vital Signs")}
         }
     }
 }

@@ -43,7 +43,7 @@ struct NavBarView: View {
 
             // Inicio
             ShellView {
-                PlaceholderContent(title: "Inicio")
+               HomeView()
             }
             .tabItem {
                 Image(systemName: "house.fill")
@@ -76,17 +76,20 @@ struct NavBarView: View {
 
 // Vista de encabezado que se mostrará siempre arriba
 private struct HeaderView: View {
+    @Binding var showSideMenu: Bool
     var body: some View {
-        ZStack{
+        ZStack {
             HStack {
-                Button(action: {}) {
-                    Text("Menu")
-                        .padding()
-                        .bold()
-                        .foregroundStyle(.white)
+                Button(action: {
+                    withAnimation {
+                        showSideMenu.toggle()
+                    }
+                }) {
+                    Image("menu")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30)
                 }
-                .background(Color.cyan)
-                .cornerRadius(10)
                 Spacer()
                 Image("CuiRo")
                     .resizable()
@@ -95,19 +98,27 @@ private struct HeaderView: View {
             }
             .padding()
         }
+      
     }
 }
 
 // Contenedor común que fija el header arriba y coloca el contenido debajo
 private struct ShellView<Content: View>: View {
     @ViewBuilder var content: Content
-
+    @State var showSideMenu: Bool = false
     var body: some View {
         VStack(spacing: 0) {
-            HeaderView()
+            HeaderView(showSideMenu: $showSideMenu)
             // El contenido específico de cada pestaña
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
+        .overlay(alignment: .leading) {
+            if showSideMenu {
+                SideMenu(showMenu: $showSideMenu)
+                    .transition(.move(edge: .leading).combined(with: .opacity))
+                    .zIndex(1)
+            }
         }
         .background(Color(red: 227/255, green: 83/255, blue: 123/255, opacity: 0.4))
         
